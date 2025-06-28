@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { View, StyleSheet, SafeAreaView, Alert, Pressable } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -37,26 +37,34 @@ export const TodoScreen: React.FC = () => {
   const isOnline = useNetworkStatus();
 
   // Redux state
-  const todosState = useSelector((state: RootState) => state.todos);
-
+  const { todos, isSyncing, lastSyncTime } = useSelector(
+    (state: RootState) => state.todos,
+  );
   // Filtered todos
-  const pendingTodos = todosState.todos.filter(todo => !todo.completed);
-  const completedTodos = todosState.todos.filter(todo => todo.completed);
+  const [pendingTodos, completedTodos] = useMemo(() => {
+    const pending: Todo[] = [];
+    const completed: Todo[] = [];
+    for (const todo of todos) {
+      if (todo.completed) {
+        completed.push(todo);
+      } else {
+        pending.push(todo);
+      }
+    }
+    return [pending, completed];
+  }, [todos]);
 
   const handleSync = useCallback(async () => {
-    if (!isOnline || todosState.isSyncing) return;
+    if (!isOnline || isSyncing) return;
 
     await SyncService.syncWithServer(
-      todosState.todos,
+      todos,
       dispatch,
       () => dispatch(setSyncStatus(true)),
       syncedTodos => {
         dispatch(setSyncStatus(false));
         syncedTodos.forEach(todo => {
-          if (
-            todo.synced &&
-            !todosState.todos.find(t => t.id === todo.id)?.synced
-          ) {
+          if (todo.synced && !todos.find(t => t.id === todo.id)?.synced) {
             dispatch(markTodoAsSynced(todo.id));
           }
         });
@@ -66,71 +74,87 @@ export const TodoScreen: React.FC = () => {
         Alert.alert('Sync Error', error);
       },
     );
-  }, [isOnline, dispatch, todosState.todos, todosState.isSyncing]);
+  }, [isOnline, dispatch, todos, isSyncing]);
 
   useEffect(() => {
     dispatch(loadTodosFromStorage());
   }, [dispatch]);
 
   useEffect(() => {
-    if (isOnline && todosState.todos.some(todo => !todo.synced)) {
+    if (isOnline && todos.some(todo => !todo.synced)) {
       handleSync();
     }
-  }, [isOnline, todosState.todos, handleSync]);
+  }, [isOnline, todos, handleSync]);
 
-  const openBottomSheet = () => {
+  const openBottomSheet = useCallback(() => {
     setIsFormVisible(true);
-  };
-  const closeBottomSheet = () => {
+  }, []);
+
+  const closeBottomSheet = useCallback(() => {
     setIsFormVisible(false);
-  };
+  }, []);
 
-  const handleCreateTodo = async (todoData: CreateTodoRequest) => {
-    try {
-      await dispatch(createTodoRedux(todoData));
-      closeBottomSheet();
-    } catch (error) {
-      Alert.alert('Error', 'Failed to create task');
-    }
-  };
+  const handleCreateTodo = useCallback(
+    async (todoData: CreateTodoRequest) => {
+      try {
+        await dispatch(createTodoRedux(todoData));
+        closeBottomSheet();
+      } catch (error) {
+        Alert.alert('Error', 'Failed to create task');
+      }
+    },
+    [dispatch, closeBottomSheet],
+  );
 
-  const handleUpdateTodo = async (todoData: CreateTodoRequest) => {
-    if (!editingTodo) return;
-    try {
-      await dispatch(
-        updateTodoRedux({
-          id: editingTodo.id,
-          title: todoData.title,
-          description: todoData.description,
-        }),
-      );
-      closeBottomSheet();
-      setEditingTodo(null);
-    } catch (error) {
-      Alert.alert('Error', 'Failed to update task');
-    }
-  };
+  const handleUpdateTodo = useCallback(
+    async (todoData: CreateTodoRequest) => {
+      if (!editingTodo) return;
+      try {
+        await dispatch(
+          updateTodoRedux({
+            id: editingTodo.id,
+            title: todoData.title,
+            description: todoData.description,
+          }),
+        );
+        closeBottomSheet();
+        setEditingTodo(null);
+      } catch (error) {
+        Alert.alert('Error', 'Failed to update task');
+      }
+    },
+    [dispatch, editingTodo, closeBottomSheet],
+  );
 
-  const handleToggleComplete = async (id: string, completed: boolean) => {
-    try {
-      await dispatch(updateTodoRedux({ id, completed }));
-    } catch (error) {
-      Alert.alert('Error', 'Failed to update task');
-    }
-  };
+  const handleToggleComplete = useCallback(
+    async (id: string, completed: boolean) => {
+      try {
+        await dispatch(updateTodoRedux({ id, completed }));
+      } catch (error) {
+        Alert.alert('Error', 'Failed to update task');
+      }
+    },
+    [dispatch],
+  );
 
-  const handleEditTodo = (todo: Todo) => {
-    setEditingTodo(todo);
-    openBottomSheet();
-  };
+  const handleEditTodo = useCallback(
+    (todo: Todo) => {
+      setEditingTodo(todo);
+      openBottomSheet();
+    },
+    [openBottomSheet],
+  );
 
-  const handleDeleteTodo = async (id: string) => {
-    try {
-      await dispatch(deleteTodoRedux(id));
-    } catch (error) {
-      Alert.alert('Error', 'Failed to delete task');
-    }
-  };
+  const handleDeleteTodo = useCallback(
+    async (id: string) => {
+      try {
+        await dispatch(deleteTodoRedux(id));
+      } catch (error) {
+        Alert.alert('Error', 'Failed to delete task');
+      }
+    },
+    [dispatch],
+  );
 
   const handleFormSubmit = (todoData: CreateTodoRequest) => {
     if (editingTodo) {
@@ -150,8 +174,8 @@ export const TodoScreen: React.FC = () => {
       {/* Sync Indicator */}
       <SyncIndicator
         isOnline={isOnline}
-        isSyncing={todosState.isSyncing}
-        lastSyncTime={todosState.lastSyncTime}
+        isSyncing={isSyncing}
+        lastSyncTime={lastSyncTime}
       />
 
       {/* Tab Navigation */}
@@ -211,7 +235,6 @@ export const TodoScreen: React.FC = () => {
           onClose={handleCloseForm}
           onSubmit={handleFormSubmit}
           editingTodo={editingTodo}
-          isLoading={todosState.isLoading}
         />
       </BottomSheet>
     </SafeAreaView>
