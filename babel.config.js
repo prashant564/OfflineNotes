@@ -22,7 +22,7 @@ module.exports = {
           '@services': './src/services',
           '@hooks': './src/hooks',
           '@store': './src/store',
-          '@typings': './src/types',
+          '@typings': './src/typings',
           '@utils': './src/utils',
         },
       },
