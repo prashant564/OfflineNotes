@@ -1,6 +1,6 @@
-import { Todo, ApiTodo } from '../types/todo';
-import { AppDispatch } from '../store/redux/store';
-import { todoApi } from '../store/redux/api/todoApi';
+import { Todo, ApiTodo } from '@typings/todo';
+import { AppDispatch } from '@store/redux/store';
+import { todoApi } from '@store/redux/api/todoApi';
 import { StorageService } from './storage';
 import { NetworkManager } from './networkManager';
 

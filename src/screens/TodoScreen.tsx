@@ -2,10 +2,16 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, SafeAreaView, Alert, Pressable } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import BottomSheet from '../components/common/BottomSheet';
 
-// Redux imports
-import { RootState, AppDispatch } from '../store/redux/store';
+// Components with path aliases
+import BottomSheet from '@components/common/BottomSheet';
+import { TaskList } from '@components/task/TaskList';
+import { TaskForm } from '@components/task/TaskForm';
+import { SyncIndicator } from '@components/common/SyncIndicator';
+import { Button } from '@components/common/Button';
+
+// Store with path aliases
+import { RootState, AppDispatch } from '@store/redux/store';
 import {
   loadTodosFromStorage,
   createTodo as createTodoRedux,
@@ -13,18 +19,12 @@ import {
   deleteTodo as deleteTodoRedux,
   setSyncStatus,
   markTodoAsSynced,
-} from '../store/redux/slices/todoSlice';
+} from '@store/redux/slices/todoSlice';
 
-// Components
-import { TaskList } from '../components/task/TaskList';
-import { TaskForm } from '../components/task/TaskForm';
-import { SyncIndicator } from '../components/common/SyncIndicator';
-import { Button } from '../components/common/Button';
-
-// Hooks and services
-import { useNetworkStatus } from '../hooks/useNetworkStatus';
-import { SyncService } from '../services/syncService';
-import { Todo, CreateTodoRequest } from '../types/todo';
+// Hooks and services with path aliases
+import { useNetworkStatus } from '@hooks/useNetworkStatus';
+import { SyncService } from '@services/syncService';
+import type { Todo, CreateTodoRequest } from '@typings/todo';
 
 export const TodoScreen: React.FC = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);

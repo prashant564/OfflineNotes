@@ -4,9 +4,9 @@ import {
   TodoState,
   CreateTodoRequest,
   UpdateTodoRequest,
-} from '../../../types/todo';
-import { StorageService } from '../../../services/storage';
-import { NetworkManager } from '../../../services/networkManager';
+} from '@typings/todo';
+import { StorageService } from '@services/storage';
+import { NetworkManager } from '@services/networkManager';
 
 const initialState: TodoState = {
   todos: [],

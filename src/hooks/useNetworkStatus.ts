@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NetworkManager } from '../services/networkManager';
+import { NetworkManager } from '@services/networkManager';
 
 export const useNetworkStatus = () => {
   const [isOnline, setIsOnline] = useState(NetworkManager.isConnected);

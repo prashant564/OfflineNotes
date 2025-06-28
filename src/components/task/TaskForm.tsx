@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
-import { Todo, CreateTodoRequest } from '../../types/todo';
-import { Button } from '../common/Button';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { Todo, CreateTodoRequest } from '@typings/todo';
+import { Button } from '@components/common/Button';
 
 interface TaskFormProps {
   onClose: () => void;

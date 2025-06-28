@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Todo } from '../../types/todo';
-import { Button } from '../common/Button';
+import { Todo } from '@typings/todo';
+import { Button } from '@components/common/Button';
 
 interface TaskItemProps {
   todo: Todo;

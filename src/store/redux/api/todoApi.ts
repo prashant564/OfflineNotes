@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { ApiTodo } from '../../../types/todo';
+import { ApiTodo } from '@typings/todo';
 
 const API_BASE_URL = 'https://jsonplaceholder.typicode.com';
 

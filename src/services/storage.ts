@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Todo } from '../types/todo';
+import { Todo } from '@typings/todo';
 
 const STORAGE_KEYS = {
   TODOS: '@todos',

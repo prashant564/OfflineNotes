@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, RefreshControl } from 'react-native';
-import { Todo } from '../../types/todo';
+import { Todo } from '@typings/todo';
 import { TaskItem } from './TaskItem';
 
 interface TaskListProps {
