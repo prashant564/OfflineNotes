@@ -19,6 +19,7 @@ import {
   deleteTodo as deleteTodoRedux,
   setSyncStatus,
   markTodoAsSynced,
+  updateSyncTime,
 } from '@store/redux/slices/todoSlice';
 
 // Hooks and services with path aliases
@@ -68,6 +69,8 @@ export const TodoScreen: React.FC = () => {
             dispatch(markTodoAsSynced(todo.id));
           }
         });
+        const newSyncTime = new Date().toISOString();
+        dispatch(updateSyncTime(newSyncTime));
       },
       error => {
         dispatch(setSyncStatus(false));
@@ -99,11 +102,15 @@ export const TodoScreen: React.FC = () => {
       try {
         await dispatch(createTodoRedux(todoData));
         closeBottomSheet();
+
+        if (isOnline) {
+          await handleSync();
+        }
       } catch (error) {
         Alert.alert('Error', 'Failed to create task');
       }
     },
-    [dispatch, closeBottomSheet],
+    [dispatch, closeBottomSheet, isOnline, handleSync],
   );
 
   const handleUpdateTodo = useCallback(
@@ -119,22 +126,30 @@ export const TodoScreen: React.FC = () => {
         );
         closeBottomSheet();
         setEditingTodo(null);
+
+        if (isOnline) {
+          await handleSync();
+        }
       } catch (error) {
         Alert.alert('Error', 'Failed to update task');
       }
     },
-    [dispatch, editingTodo, closeBottomSheet],
+    [dispatch, editingTodo, closeBottomSheet, isOnline, handleSync],
   );
 
   const handleToggleComplete = useCallback(
     async (id: string, completed: boolean) => {
       try {
         await dispatch(updateTodoRedux({ id, completed }));
+
+        if (isOnline) {
+          await handleSync();
+        }
       } catch (error) {
         Alert.alert('Error', 'Failed to update task');
       }
     },
-    [dispatch],
+    [dispatch, isOnline, handleSync],
   );
 
   const handleEditTodo = useCallback(
@@ -149,11 +164,15 @@ export const TodoScreen: React.FC = () => {
     async (id: string) => {
       try {
         await dispatch(deleteTodoRedux(id));
+
+        if (isOnline) {
+          await handleSync();
+        }
       } catch (error) {
         Alert.alert('Error', 'Failed to delete task');
       }
     },
-    [dispatch],
+    [dispatch, isOnline, handleSync],
   );
 
   const handleFormSubmit = (todoData: CreateTodoRequest) => {
