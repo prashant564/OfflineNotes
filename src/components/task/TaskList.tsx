@@ -1,7 +1,8 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, RefreshControl } from 'react-native';
 import { Todo } from '@typings/todo';
-import { TaskItem } from './TaskItem';
+import TaskItem from '@components/task/TaskItem';
 
 interface TaskListProps {
   todos: Todo[];
@@ -24,19 +25,25 @@ export const TaskList: React.FC<TaskListProps> = ({
   refreshing = false,
   emptyMessage = 'No tasks found',
 }) => {
-  const renderItem = ({ item }: { item: Todo }) => (
-    <TaskItem
-      todo={item}
-      onToggleComplete={onToggleComplete}
-      onEdit={onEdit}
-      onDelete={onDelete}
-    />
+  const renderItem = useCallback(
+    ({ item }: { item: Todo }) => (
+      <TaskItem
+        todo={item}
+        onToggleComplete={onToggleComplete}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
+    ),
+    [],
   );
 
-  const renderEmptyComponent = () => (
-    <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>{emptyMessage}</Text>
-    </View>
+  const renderEmptyComponent = useCallback(
+    () => (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>{emptyMessage}</Text>
+      </View>
+    ),
+    [],
   );
 
   return (

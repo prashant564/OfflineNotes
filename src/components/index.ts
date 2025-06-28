@@ -5,5 +5,5 @@ export { SyncIndicator } from './common/SyncIndicator';
 
 // Task components
 export { TaskForm } from './task/TaskForm';
-export { TaskItem } from './task/TaskItem';
+export { default as TaskItem } from './task/TaskItem';
 export { TaskList } from './task/TaskList';

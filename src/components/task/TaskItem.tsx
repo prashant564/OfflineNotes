@@ -11,7 +11,7 @@ interface TaskItemProps {
   onDelete: (id: string) => void;
 }
 
-export const TaskItem: React.FC<TaskItemProps> = ({
+const TaskItem: React.FC<TaskItemProps> = ({
   todo,
   onToggleComplete,
   onEdit,
@@ -101,6 +101,8 @@ export const TaskItem: React.FC<TaskItemProps> = ({
     </View>
   );
 };
+
+export default React.memo(TaskItem);
 
 const styles = StyleSheet.create({
   container: {
