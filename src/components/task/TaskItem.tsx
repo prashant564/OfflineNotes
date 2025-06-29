@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Todo } from '@typings/todo';
 import { Button } from '@components/common/Button';
+import { useSnackbar } from '@utils/snackbar';
 
 interface TaskItemProps {
   todo: Todo;
@@ -18,16 +19,17 @@ const TaskItem: React.FC<TaskItemProps> = ({
   onDelete,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const { dispatch: snackbarDispatch } = useSnackbar();
 
   const handleDelete = () => {
-    Alert.alert('Delete Task', 'Are you sure you want to delete this task?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: () => onDelete(todo.id),
-      },
-    ]);
+    snackbarDispatch?.({
+      type: 'open',
+      message: 'Are you sure you want to delete this task?',
+      alertType: 'warning',
+      actionText: 'Delete',
+      autoClose: false,
+      closerFn: () => onDelete(todo.id),
+    });
   };
 
   const getSyncStatusIcon = () => {

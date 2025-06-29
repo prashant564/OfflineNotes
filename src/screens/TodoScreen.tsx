@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { View, StyleSheet, SafeAreaView, Alert, Pressable } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Pressable } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -26,6 +26,7 @@ import {
 import { useNetworkStatus } from '@hooks/useNetworkStatus';
 import { SyncService } from '@services/syncService';
 import type { Todo, CreateTodoRequest } from '@typings/todo';
+import { useSnackbar } from '@utils/snackbar';
 
 export const TodoScreen: React.FC = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -36,6 +37,7 @@ export const TodoScreen: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const isOnline = useNetworkStatus();
+  const { dispatch: snackbarDispatch } = useSnackbar();
 
   // Redux state
   const { todos, isSyncing, lastSyncTime } = useSelector(
@@ -54,6 +56,21 @@ export const TodoScreen: React.FC = () => {
     }
     return [pending, completed];
   }, [todos]);
+
+  const showSnackbar = useCallback(
+    (
+      message: string,
+      type: 'success' | 'error' | 'warning' | 'info' = 'info',
+    ) => {
+      snackbarDispatch?.({
+        type: 'open',
+        message,
+        alertType: type,
+        autoClose: true,
+      });
+    },
+    [snackbarDispatch],
+  );
 
   const handleSync = useCallback(async () => {
     if (!isOnline || isSyncing) return;
@@ -74,10 +91,10 @@ export const TodoScreen: React.FC = () => {
       },
       error => {
         dispatch(setSyncStatus(false));
-        Alert.alert('Sync Error', error);
+        showSnackbar(error, 'error');
       },
     );
-  }, [isOnline, dispatch, todos, isSyncing]);
+  }, [isOnline, dispatch, todos, isSyncing, showSnackbar]);
 
   useEffect(() => {
     dispatch(loadTodosFromStorage());
@@ -102,15 +119,16 @@ export const TodoScreen: React.FC = () => {
       try {
         await dispatch(createTodoRedux(todoData));
         closeBottomSheet();
+        showSnackbar('Task created successfully!', 'success');
 
         if (isOnline) {
           await handleSync();
         }
       } catch (error) {
-        Alert.alert('Error', 'Failed to create task');
+        showSnackbar('Failed to create task', 'error');
       }
     },
-    [dispatch, closeBottomSheet, isOnline, handleSync],
+    [dispatch, closeBottomSheet, isOnline, handleSync, showSnackbar],
   );
 
   const handleUpdateTodo = useCallback(
@@ -126,30 +144,42 @@ export const TodoScreen: React.FC = () => {
         );
         closeBottomSheet();
         setEditingTodo(null);
+        showSnackbar('Task updated successfully!', 'success');
 
         if (isOnline) {
           await handleSync();
         }
       } catch (error) {
-        Alert.alert('Error', 'Failed to update task');
+        showSnackbar('Failed to update task', 'error');
       }
     },
-    [dispatch, editingTodo, closeBottomSheet, isOnline, handleSync],
+    [
+      dispatch,
+      editingTodo,
+      closeBottomSheet,
+      isOnline,
+      handleSync,
+      showSnackbar,
+    ],
   );
 
   const handleToggleComplete = useCallback(
     async (id: string, completed: boolean) => {
       try {
         await dispatch(updateTodoRedux({ id, completed }));
+        showSnackbar(
+          completed ? 'Task marked as completed!' : 'Task marked as pending!',
+          'success',
+        );
 
         if (isOnline) {
           await handleSync();
         }
       } catch (error) {
-        Alert.alert('Error', 'Failed to update task');
+        showSnackbar('Failed to update task', 'error');
       }
     },
-    [dispatch, isOnline, handleSync],
+    [dispatch, isOnline, handleSync, showSnackbar],
   );
 
   const handleEditTodo = useCallback(
@@ -164,15 +194,16 @@ export const TodoScreen: React.FC = () => {
     async (id: string) => {
       try {
         await dispatch(deleteTodoRedux(id));
+        showSnackbar('Task deleted successfully!', 'error');
 
         if (isOnline) {
           await handleSync();
         }
       } catch (error) {
-        Alert.alert('Error', 'Failed to delete task');
+        showSnackbar('Failed to delete task', 'error');
       }
     },
-    [dispatch, isOnline, handleSync],
+    [dispatch, isOnline, handleSync, showSnackbar],
   );
 
   const handleFormSubmit = (todoData: CreateTodoRequest) => {
@@ -254,6 +285,7 @@ export const TodoScreen: React.FC = () => {
           onClose={handleCloseForm}
           onSubmit={handleFormSubmit}
           editingTodo={editingTodo}
+          isLoading={isSyncing}
         />
       </BottomSheet>
     </SafeAreaView>

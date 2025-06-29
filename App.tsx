@@ -5,6 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { store } from './src/store/redux/store';
 import { NetworkManager } from './src/services/networkManager';
 import TodoScreen from './src/screens/TodoScreen';
+import { SnackbarProvider } from '@utils/snackbar';
+import { Snackbar } from '@components/common/Snackbar';
+import { WrappedApp } from '@components/common/WrappedApp';
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -14,8 +17,13 @@ const App: React.FC = () => {
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
       <Provider store={store}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-        <TodoScreen />
+        <SnackbarProvider>
+          <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+          <WrappedApp>
+            <TodoScreen />
+          </WrappedApp>
+          <Snackbar />
+        </SnackbarProvider>
       </Provider>
     </SafeAreaView>
   );
