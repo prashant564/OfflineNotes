@@ -1,4 +1,56 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# ToDoListApp
+
+A robust offline-first To-Do application built with React Native.
+
+## Features
+
+- **Add, Edit, and Delete Tasks:**
+  - Create new tasks with a title and description.
+  - Edit or delete existing tasks easily.
+
+- **Mark Tasks as Completed or Pending:**
+  - Toggle tasks between pending and completed states.
+
+- **Task Organization:**
+  - View tasks in two separate lists: "Pending" and "Completed".
+  - Smooth performance using FlatList for rendering tasks.
+
+- **Offline-First Functionality:**
+  - All tasks are persisted locally using AsyncStorage, ensuring no data loss when offline or when the app is closed.
+  - When the device is online, tasks are automatically synced with a remote mock API ([jsonplaceholder.typicode.com/todos](https://jsonplaceholder.typicode.com/todos)).
+
+- **Sync Status Indicator:**
+  - Visual indicator shows when the app is syncing data with the server, as well as online/offline status.
+
+- **Custom Snackbar Component:**
+  - Built a reusable Snackbar component to provide instant feedback for user actions (success, error, info, etc.), enhancing user experience.
+
+- **User Experience:**
+  - Responsive UI with feedback for all actions.
+  - Modern design and smooth animations.
+
+## Upcoming Features
+
+- **2-Way Remote and Local Syncing:**
+  - Full two-way sync between local storage and remote server, including conflict resolution.
+
+- **Switch to MMKV Storage:**
+  - Replace AsyncStorage with [react-native-mmkv](https://github.com/mrousavy/react-native-mmkv) for faster, more secure, and efficient local storage.
+
+- **Unit and E2E Tests:**
+  - Add comprehensive unit tests and end-to-end (E2E) tests to ensure app reliability and quality.
+
+## Demo
+
+**Demo Video:**
+[// TODO: Add demo video link here]
+
+**APK Download:**
+[// TODO: Add Google Drive link for APK here]
+
+---
+
+Built with ❤️ using React Native.
 
 # Getting Started
 
@@ -66,7 +118,7 @@ This is one way to run your app — you can also build it directly from Android 
 
 Now that you have successfully run the app, let's make changes!
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
 
 When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
 
