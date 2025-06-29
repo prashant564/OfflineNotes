@@ -232,12 +232,14 @@ export const TodoScreen: React.FC = () => {
       <View style={styles.tabContainer}>
         <Button
           title={`Pending (${pendingTodos.length})`}
+          size={'large'}
           variant={activeTab === 'pending' ? 'primary' : 'secondary'}
           onPress={() => setActiveTab('pending')}
           style={styles.tabButton}
         />
         <Button
           title={`Completed (${completedTodos.length})`}
+          size={'large'}
           variant={activeTab === 'completed' ? 'primary' : 'secondary'}
           onPress={() => setActiveTab('completed')}
           style={styles.tabButton}

@@ -70,12 +70,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Button
-          title="Cancel"
-          variant="secondary"
-          size="small"
-          onPress={handleClose}
-        />
+        <Button title="Cancel" variant="danger" onPress={handleClose} />
         <Button
           title={editingTodo ? 'Update Task' : 'Create Task'}
           onPress={handleSubmit}
@@ -129,7 +124,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',

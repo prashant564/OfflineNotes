@@ -28,7 +28,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
       alertType: 'warning',
       actionText: 'Delete',
       autoClose: false,
-      closerFn: () => onDelete(todo.id),
+      actionFn: () => onDelete(todo.id),
     });
   };
 
@@ -87,14 +87,14 @@ const TaskItem: React.FC<TaskItemProps> = ({
           <Button
             title="Edit"
             variant="secondary"
-            size="small"
+            size="medium"
             onPress={() => onEdit(todo)}
             style={styles.actionButton}
           />
           <Button
             title="Delete"
             variant="danger"
-            size="small"
+            size="medium"
             onPress={handleDelete}
             style={styles.actionButton}
           />

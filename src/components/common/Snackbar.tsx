@@ -38,6 +38,11 @@ export const Snackbar: React.FC = () => {
     }
   }, [alert?.open, alert?.autoClose, dispatch, translateY]);
 
+  const handleAction = () => {
+    dispatch?.({ type: 'close' });
+    alert?.actionFn?.();
+  };
+
   const handleClose = () => {
     dispatch?.({ type: 'close' });
     alert?.closerFn?.();
@@ -88,7 +93,7 @@ export const Snackbar: React.FC = () => {
 
       <View style={styles.actions}>
         {alert.actionText && (
-          <TouchableOpacity onPress={handleClose} style={styles.actionButton}>
+          <TouchableOpacity onPress={handleAction} style={styles.actionButton}>
             <Text style={styles.actionText}>{alert.actionText}</Text>
           </TouchableOpacity>
         )}

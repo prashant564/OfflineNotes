@@ -14,6 +14,7 @@ export type SnackbarContextFields = {
   icon?: string;
   actionText?: string;
   autoClose?: boolean;
+  actionFn?: () => void;
   closerFn?: () => void;
 };
 
@@ -24,6 +25,7 @@ const initialState: SnackbarContextFields = {
   icon: undefined,
   actionText: undefined,
   autoClose: true,
+  actionFn: undefined,
   closerFn: undefined,
 };
 
@@ -47,6 +49,7 @@ function reducer(state: any, action: any): SnackbarContextFields {
         icon: action.icon,
         actionText: action.actionText,
         autoClose: action.autoClose,
+        actionFn: action.actionFn,
         closerFn: action.closerFn,
       };
     default:
