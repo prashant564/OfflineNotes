@@ -43,10 +43,10 @@ A robust offline-first To-Do application built with React Native.
 ## Demo
 
 **Demo Video:**
-[// TODO: Add demo video link here]
+[App Demo](https://drive.google.com/file/d/1Kk0TN2BYV63hL6dvHsc-hYcNJqoq1o7v/view?usp=sharing)
 
 **APK Download:**
-[// TODO: Add Google Drive link for APK here]
+[APK](https://drive.google.com/file/d/1xDZVySZXmn_1QTgcOUBg6kasxQBGKTll/view?usp=sharing)
 
 ---
 
